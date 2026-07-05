@@ -57,7 +57,6 @@ special filetypes unless you explicitly need them.
     named ``extractall``
 
 """
-
 import ast
 
 import bandit
