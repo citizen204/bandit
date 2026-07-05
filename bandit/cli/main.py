@@ -3,6 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 """Bandit is a tool designed to find common security issues in Python code."""
+
 import argparse
 import fnmatch
 import logging
@@ -134,12 +135,13 @@ def _log_info(args, profile):
 def main():
     """Bandit CLI."""
     # bring our logging stuff up as early as possible
-    debug = (
-        logging.DEBUG
-        if "-d" in sys.argv or "--debug" in sys.argv
-        else logging.INFO
-    )
-    _init_logger(debug)
+    if "-d" in sys.argv or "--debug" in sys.argv:
+        log_level = logging.DEBUG
+    elif "-q" in sys.argv or "--quiet" in sys.argv or "--silent" in sys.argv:
+        log_level = logging.WARN
+    else:
+        log_level = logging.INFO
+    _init_logger(log_level)
     extension_mgr = _init_extensions()
 
     baseline_formatters = [
@@ -393,8 +395,7 @@ def main():
             blacklist_info.append(f"{b['id']}\t{b['name']}")
 
     plugin_list = "\n\t".join(sorted(set(plugin_info + blacklist_info)))
-    dedent_text = textwrap.dedent(
-        """
+    dedent_text = textwrap.dedent("""
     CUSTOM FORMATTING
     -----------------
 
@@ -421,8 +422,7 @@ def main():
 
     The following tests were discovered and loaded:
     -----------------------------------------------
-    """
-    )
+    """)
     parser.epilog = dedent_text + f"\t{plugin_list}"
 
     # setup work - parse arguments, and initialize BanditManager
