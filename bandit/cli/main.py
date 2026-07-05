@@ -3,7 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 """Bandit is a tool designed to find common security issues in Python code."""
-
 import argparse
 import fnmatch
 import logging
@@ -395,7 +394,8 @@ def main():
             blacklist_info.append(f"{b['id']}\t{b['name']}")
 
     plugin_list = "\n\t".join(sorted(set(plugin_info + blacklist_info)))
-    dedent_text = textwrap.dedent("""
+    dedent_text = textwrap.dedent(
+        """
     CUSTOM FORMATTING
     -----------------
 
@@ -422,7 +422,8 @@ def main():
 
     The following tests were discovered and loaded:
     -----------------------------------------------
-    """)
+    """
+    )
     parser.epilog = dedent_text + f"\t{plugin_list}"
 
     # setup work - parse arguments, and initialize BanditManager
