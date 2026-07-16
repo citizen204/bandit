@@ -679,6 +679,12 @@ def main():
     # trigger output of results by Bandit Manager
     sev_level = constants.RANKING[args.severity - 1]
     conf_level = constants.RANKING[args.confidence - 1]
+    if args.output_file is sys.stdout:
+        # -o/--output already forces utf-8 via argparse.FileType, but the
+        # sys.stdout default keeps the platform's default encoding (e.g.
+        # cp1252 on Windows), which crashes on non-ASCII report content
+        # such as under pre-commit's isolated hook environment.
+        sys.stdout.reconfigure(encoding="utf-8")
     b_mgr.output_results(
         args.context_lines,
         sev_level,
